@@ -1,4 +1,6 @@
 from PIL import Image
+import pygame
+from pygame.locals import *
 
 class Level:
     "Leveli .png fail läheb muutujaks"
@@ -30,3 +32,32 @@ level = Level("Leveli näide.png")
 current_pos = (25,25)
 print(level.get_pixel_value(level.open_pic(), current_pos))
 """
+level = Level("Leveli näide.png")
+pilt = level.resize_level((1280, 960))
+
+mode = pilt.mode
+size = pilt.size
+data = pilt.tobytes()
+
+lisa = 500
+x = size[0]+lisa
+y = size[1]
+
+# Initialise screen
+pygame.init()
+screen = pygame.display.set_mode((x, y))
+pygame.display.set_caption('Basic Pygame program')
+
+# Fill background
+this = pygame.image.fromstring(data, size, mode)
+background = this
+
+# Event loop
+while 1:
+    screen.fill((255, 255, 255))
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            quit()
+
+    screen.blit(background, (int(lisa/2), 0))
+    pygame.display.flip()
