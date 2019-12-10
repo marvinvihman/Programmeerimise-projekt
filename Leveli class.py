@@ -11,13 +11,6 @@ class Level:
     def open_pic(self):
         return Image.open(self.piltFail, "r") #Originaal pilt
 
-    "Funktsioon tagastab, mis ette antud positsioonil värvi data on"
-    def get_pixel_value(self, level, pos):
-        self.level = level # Image.open(level)
-        self.pos = pos # (x, y) kujul positsioon, kust soovid data't saada
-        pix_value = level.getpixel(pos) # Tagastab (r,g,b)
-        return pix_value
-
     "Pildi downscalimiseks" \
     "Avab leveli ning teeb etteantud suuruseks" \
     "tagastab uue leveli"
@@ -27,28 +20,36 @@ class Level:
         level = piltFail.resize(new_size, Image.LANCZOS) # Tagastab uue leveli uute mõõtmetega
         return level
 
+    "Funktsioon tagastab, mis ette antud positsioonil värvi data on"
+    def get_pixel_value(self, level, pos):
+        self.level = level # Image.open(level)
+        self.pos = pos # (x, y) kujul positsioon, kust soovid data't saada
+        pix_value = level.getpixel(pos) # Tagastab (r,g,b)
+        return pix_value
+
+
 """ ns proov
 level = Level("Leveli näide.png")
 current_pos = (25,25)
 print(level.get_pixel_value(level.open_pic(), current_pos))
 """
-level = Level("Leveli näide.png")
-pilt = level.resize_level((1280, 960))
+level = Level("Level1.png")
+pilt = level.open_pic() #default size (1440, 1080)
 
 mode = pilt.mode
 size = pilt.size
 data = pilt.tobytes()
 
 lisa = 500
-x = size[0]+lisa
+x = size[0] + lisa
 y = size[1]
 
 # Initialise screen
 pygame.init()
-screen = pygame.display.set_mode((x, y))
+screen = pygame.display.set_mode((0,0), FULLSCREEN)
 pygame.display.set_caption('Basic Pygame program')
 
-# Fill background
+# Background
 this = pygame.image.fromstring(data, size, mode)
 background = this
 
