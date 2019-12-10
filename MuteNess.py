@@ -5,6 +5,7 @@ import ctypes
 import pygame
 from pygame.locals import *
 import math
+from PIL import Image
 
 user32 = ctypes.windll.user32
 width, height = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
