@@ -15,8 +15,12 @@ if disp_orig_w*3 < 4*disp_orig_h:
 else:
     scale_ratio = 0
 
+
+BORDER = 1920 - 1440
 #kas aken on FULLSCREEN mode peal või mitte
-FULLSCREEN = 0
+FULLSCREEN = 1
+
+SPEED = 10
 
 bgColor = (0, 255, 255)
 

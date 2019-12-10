@@ -46,6 +46,8 @@ while running:
 import pygame
 from settings import *
 import math
+from Level import Level
+from random import randint
 
 pygame.init()
 
@@ -69,36 +71,55 @@ moveLeft = 0
 moveUp = 0
 moveDown = 0
 
+PI = math.pi
+
+level = Level("Level1.png")
+pilt = level.open_pic() #default size (1440, 1080)
+
+mode = pilt.mode
+size = pilt.size
+data = pilt.tobytes()
+
+x = size[0] + BORDER
+y = size[1]
+
+background = pygame.image.fromstring(data, size, mode)
+
 running = True
 while running:
     screen.fill(bgColor)
+
+    screen.blit(background, (int(BORDER / 2), 0))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_d:
+            if event.key == pygame.K_z:
                 moveRight = 1
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_x:
                 moveLeft = -1
-            if event.key == pygame.K_s:
+            if event.key == pygame.K_c:
                 moveDown = 1
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_v:
                 moveUp = -1
+            if event.key == pygame.K_ESCAPE:
+                running = False
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_d:
+            if event.key == pygame.K_z:
                 moveRight = 0
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_x:
                 moveLeft = 0
-            if event.key == pygame.K_s:
+            if event.key == pygame.K_c:
                 moveDown = 0
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_v:
                 moveUp = 0
 
-    positionX += moveRight + moveLeft
-    positionY += moveUp + moveDown
+    checkDiagonal = max(1, abs(moveRight + moveLeft) + abs(moveDown + moveUp))
 
-
+    positionX += (moveRight + moveLeft) / math.sqrt(checkDiagonal) * SPEED
+    positionY += (moveUp + moveDown) / math.sqrt(checkDiagonal) * SPEED
 
 
     if positionX <= 0:
@@ -113,7 +134,17 @@ while running:
         positionY = disp_h - 128
 
 
-    Player((positionX, positionY))
+
+
+    Player((int(positionX), int(positionY)))
+
+    for i in range(1,17):
+        x = int(64*math.sin(math.degrees(360/i))+positionX+64)
+        y = int(64*math.cos(math.degrees(360/i))+positionY+64)
+        if level.get_pixel_value(pilt, (x,y)) == (0,0,0):
+            print((x, y), pilt)
+            #running = False
+        pygame.draw.line(screen, (randint(0,255), randint(0,255), randint(0,255)), (x, y), (x, y), 10)
 
 
 

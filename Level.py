@@ -33,6 +33,8 @@ level = Level("Leveli näide.png")
 current_pos = (25,25)
 print(level.get_pixel_value(level.open_pic(), current_pos))
 """
+
+"""
 level = Level("Level1.png")
 pilt = level.open_pic() #default size (1440, 1080)
 
@@ -62,3 +64,5 @@ while 1:
 
     screen.blit(background, (int(lisa/2), 0))
     pygame.display.flip()
+
+"""
