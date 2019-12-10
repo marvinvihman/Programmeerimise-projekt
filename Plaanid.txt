@@ -1,0 +1,4 @@
+Plaanime:
+*liikumise tööle saada
+*leveli saada ekraanile õige suurusega
+*collisioni tööle saada
