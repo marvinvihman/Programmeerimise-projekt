@@ -20,11 +20,15 @@ BORDER = 1920 - 1440
 #kas aken on FULLSCREEN mode peal või mitte
 FULLSCREEN = 1
 
-SPEED = 10
+SPEED = 2
 
 bgColor = (0, 255, 255)
 
-positionX, positionY = 10, 10
+positionX, positionY = int(BORDER/2) + 10, 0 + 10
 startPos = (positionX, positionY)
+
+playerSize = 20
+
+restart = True
 
 

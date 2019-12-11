@@ -51,6 +51,12 @@ from random import randint
 
 pygame.init()
 
+pygame.font.init() # you have to call this at the start,
+                   # if you want to use this module.
+myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
+
+
 if FULLSCREEN == 1:
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     disp_h = 1080
@@ -61,6 +67,8 @@ else:
 pygame.display.set_caption("MUTENESS")
 
 playerImage = pygame.image.load("ball.png")
+
+playerImage = pygame.transform.scale(playerImage, (playerSize, playerSize))
 
 def Player(pos):
     screen.blit(playerImage, pos)
@@ -137,16 +145,17 @@ while running:
 
 
     Player((int(positionX), int(positionY)))
+    screen.blit(myfont.render(str(level.get_pixel_value(pilt, (positionX-BORDER/2, positionY))), False, (0, 0, 0)), (10, 10))
 
-    for i in range(1,17):
-        x = int(64*math.sin(math.degrees(360/i))+positionX+64)
-        y = int(64*math.cos(math.degrees(360/i))+positionY+64)
-        if level.get_pixel_value(pilt, (x,y)) == (0,0,0):
-            print((x, y), pilt)
-            #running = False
+    for i in range(1,playerSize+1):
+        x = int(playerSize/2*math.sin(math.degrees(360/i))+positionX+playerSize/2)
+        y = int(playerSize/2*math.cos(math.degrees(360/i))+positionY+playerSize/2)
+        if level.get_pixel_value(pilt, (x-BORDER/2,y)) == (0, 0, 0):
+            if restart == True:
+                positionX, positionY = int(BORDER / 2) + 10, 0 + 10
+            else:
+                running = False
         pygame.draw.line(screen, (randint(0,255), randint(0,255), randint(0,255)), (x, y), (x, y), 10)
-
-
 
     pygame.display.update()
 
