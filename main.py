@@ -213,6 +213,15 @@ while running:
         elif level.get_pixel_value(pilt, (x - BORDER / 2, y)) == (255, 0, 0):
             timer_started = False
             ajad.append(passed_time / 1000)
+            if restart == True:
+                acceleratingRight = 0
+                acceleratingLeft = 0
+                acceleratingDown = 0
+                acceleratingUp = 0
+                positionX, positionY = int(BORDER / 2) + 10, 0 + 10
+            else:
+                running = False
+
 
     if timer_started:
         passed_time = pygame.time.get_ticks() - start_time
