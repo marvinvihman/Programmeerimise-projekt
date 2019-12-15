@@ -55,6 +55,14 @@ pygame.font.init() # you have to call this at the start,
                    # if you want to use this module.
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
+#Aja muutujad
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 54)
+font_color = pygame.Color('red')
+
+passed_time = 0
+timer_started = False
+
 
 
 if FULLSCREEN == 1:
@@ -155,9 +163,24 @@ while running:
                 positionX, positionY = int(BORDER / 2) + 10, 0 + 10
             else:
                 running = False
+        elif level.get_pixel_value(pilt, (x-BORDER/2,y)) == (0, 255, 0):
+            timer_started = True
+            if timer_started:
+                start_time = pygame.time.get_ticks()
+
+        elif level.get_pixel_value(pilt, (x - BORDER / 2, y)) == (255, 0, 0):
+            timer_started = not timer_started
+
+    if timer_started:
+        passed_time = pygame.time.get_ticks() - start_time
+
         pygame.draw.line(screen, (randint(0,255), randint(0,255), randint(0,255)), (x, y), (x, y), 10)
 
+    #Aja kuvamine
+    text = font.render("Current time:", True, font_color)
+    text_sec = font.render(str(passed_time / 1000), True, font_color)
+    screen.blit(text, (size[0] + int(BORDER / 2), 0))
+    screen.blit(text_sec, (size[0] + int(BORDER / 2) + 100, 50))
+
     pygame.display.update()
-
-
-
+    clock.tick(60)
