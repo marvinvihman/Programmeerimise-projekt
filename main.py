@@ -49,10 +49,13 @@ import math
 from Level import Level
 from random import randint
 
+#pygame tööle
 pygame.init()
 
-pygame.font.init() # you have to call this at the start,
-                   # if you want to use this module.
+#font tööle
+pygame.font.init()
+
+#fondi väärtused
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 #Aja muutujad
@@ -64,7 +67,7 @@ passed_time = 0
 timer_started = False
 
 
-
+#kui settingutest on fullscreen 1 siis avab akna FULLSCREEN mode peal
 if FULLSCREEN == 1:
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     disp_h = 1080
@@ -72,16 +75,17 @@ if FULLSCREEN == 1:
 else:
     screen = pygame.display.set_mode((disp_w, disp_h))
 
+#akna nimi
 pygame.display.set_caption("MUTENESS")
-
+#karakteri pilt
 playerImage = pygame.image.load("ball.png")
-
+#muudame karakteri suurust
 playerImage = pygame.transform.scale(playerImage, (playerSize, playerSize))
 
-def Player(pos):
-    screen.blit(playerImage, pos)
+#karakter startpositsioonis
+screen.blit(playerImage, startPos)
 
-Player(startPos)
+#suunaväärtused
 moveRight = 0
 moveLeft = 0
 moveUp = 0
@@ -89,28 +93,50 @@ moveDown = 0
 
 PI = math.pi
 
+#võtame mapi
 level = Level("Level1.png")
 pilt = level.open_pic() #default size (1440, 1080)
 
+#leveli argumendid
 mode = pilt.mode
 size = pilt.size
 data = pilt.tobytes()
 
+#leveli koordinaadid
 x = size[0] + BORDER
 y = size[1]
 
+#level image väärtusena, et blittida ekraanile
 background = pygame.image.fromstring(data, size, mode)
 
+#kiirendus
+acceleration = 0.1
+
+#kiirenduste suunad
+acceleratingRight = 0
+acceleratingLeft = 0
+acceleratingDown = 0
+acceleratingUp = 0
+
+#maksimumkiirus
+maxSpeed = 3
+
+#põhitsükkel
 running = True
 while running:
+
+    #taustavärv
     screen.fill(bgColor)
 
+    #lisame leveli
     screen.blit(background, (int(BORDER / 2), 0))
 
+    #event handler
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
-
+        #kui nupuvajutus siis vastav muutus
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_z:
                 moveRight = 1
@@ -122,6 +148,7 @@ while running:
                 moveUp = -1
             if event.key == pygame.K_ESCAPE:
                 running = False
+        #kui nupp lastakse lahti siis vastavad muutused
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_z:
                 moveRight = 0
@@ -132,32 +159,46 @@ while running:
             if event.key == pygame.K_v:
                 moveUp = 0
 
+    #kontrollib kas karakteri suund on diagonaal
     checkDiagonal = max(1, abs(moveRight + moveLeft) + abs(moveDown + moveUp))
 
-    positionX += (moveRight + moveLeft) / math.sqrt(checkDiagonal) * SPEED
-    positionY += (moveUp + moveDown) / math.sqrt(checkDiagonal) * SPEED
+    #kiirendushandler
+    if moveRight == 1:
+        acceleratingRight = min(maxSpeed, acceleratingRight + acceleration)
+    else:
+        acceleratingRight = max(0, acceleratingRight - acceleration)
 
+    if moveLeft == -1:
+        acceleratingLeft = max(-maxSpeed, acceleratingLeft - acceleration)
+    else:
+        acceleratingLeft = min(0, acceleratingLeft + acceleration)
 
-    if positionX <= 0:
-        positionX = 0
+    if moveDown == 1:
+        acceleratingDown = min(maxSpeed, acceleratingDown + acceleration)
+    else:
+        acceleratingDown = max(0, acceleratingDown - acceleration)
 
-    elif positionX >= disp_w - 128:
-        positionX = disp_w - 128
+    if moveUp == -1:
+        acceleratingUp = max(-maxSpeed, acceleratingUp - acceleration)
+    else:
+        acceleratingUp = min(0, acceleratingUp + acceleration)
 
-    if positionY <= 0:
-        positionY = 0
-    elif positionY >= disp_h -128:
-        positionY = disp_h - 128
+    #karakteri positsioon X ja Y, kiiruse jaoks
+    positionX += (acceleratingRight + acceleratingLeft) / math.sqrt(checkDiagonal) * SPEED
+    positionY += (acceleratingDown + acceleratingUp) / math.sqrt(checkDiagonal) * SPEED
 
-
-
-
-    Player((int(positionX), int(positionY)))
+    #näitame karaktrit aknas
+    screen.blit(playerImage, ((int(positionX), int(positionY))))
+    #näitame piksi värvi karakteri  asukohas, tema vasak ülemine nurk
     screen.blit(myfont.render(str(level.get_pixel_value(pilt, (positionX-BORDER/2, positionY))), False, (0, 0, 0)), (10, 10))
 
+
+    #palli jaoks piiride loomine
     for i in range(1,playerSize+1):
         x = int(playerSize/2*math.sin(math.degrees(360/i))+positionX+playerSize/2)
         y = int(playerSize/2*math.cos(math.degrees(360/i))+positionY+playerSize/2)
+
+        #kontrollimine, kas karkateri piir asub musta piksli peal
         if level.get_pixel_value(pilt, (x-BORDER/2,y)) == (0, 0, 0):
             if restart == True:
                 positionX, positionY = int(BORDER / 2) + 10, 0 + 10
@@ -174,8 +215,8 @@ while running:
     if timer_started:
         passed_time = pygame.time.get_ticks() - start_time
 
-        pygame.draw.line(screen, (randint(0,255), randint(0,255), randint(0,255)), (x, y), (x, y), 10)
 
+    #uuendame akent
     #Aja kuvamine
     text = font.render("Current time:", True, font_color)
     text_sec = font.render(str(passed_time / 1000), True, font_color)
