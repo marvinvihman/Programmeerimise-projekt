@@ -1,6 +1,4 @@
 from PIL import Image
-import pygame
-from pygame.locals import *
 
 class Level:
     "Leveli .png fail läheb muutujaks"
@@ -26,43 +24,3 @@ class Level:
         self.pos = pos # (x, y) kujul positsioon, kust soovid data't saada
         pix_value = level.getpixel(pos) # Tagastab (r,g,b)
         return pix_value
-
-
-""" ns proov
-level = Level("Leveli näide.png")
-current_pos = (25,25)
-print(level.get_pixel_value(level.open_pic(), current_pos))
-"""
-
-"""
-level = Level("Level1.png")
-pilt = level.open_pic() #default size (1440, 1080)
-
-mode = pilt.mode
-size = pilt.size
-data = pilt.tobytes()
-
-lisa = 500
-x = size[0] + lisa
-y = size[1]
-
-# Initialise screen
-pygame.init()
-screen = pygame.display.set_mode((0,0), FULLSCREEN)
-pygame.display.set_caption('Basic Pygame program')
-
-# Background
-this = pygame.image.fromstring(data, size, mode)
-background = this
-
-# Event loop
-while 1:
-    screen.fill((255, 255, 255))
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            quit()
-
-    screen.blit(background, (int(lisa/2), 0))
-    pygame.display.flip()
-
-"""

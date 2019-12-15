@@ -31,4 +31,11 @@ playerSize = 20
 
 restart = True
 
+#maksimumkiirus
+maxSpeed = 3
 
+#kiirendus
+acceleration = 0.1
+
+#levelid
+levelid = ["Level1.png", "Level2.png", "Level3.png"]
