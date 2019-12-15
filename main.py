@@ -63,6 +63,7 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None, 54)
 font_color = pygame.Color('red')
 
+ajad = [999999, 999999, 999999, 999999, 999999]
 passed_time = 0
 timer_started = False
 
@@ -200,17 +201,18 @@ while running:
 
         #kontrollimine, kas karkateri piir asub musta piksli peal
         if level.get_pixel_value(pilt, (x-BORDER/2,y)) == (0, 0, 0):
-            if restart == True:
+            if restart == False:
                 positionX, positionY = int(BORDER / 2) + 10, 0 + 10
             else:
-                running = False
+                running = True
         elif level.get_pixel_value(pilt, (x-BORDER/2,y)) == (0, 255, 0):
             timer_started = True
             if timer_started:
                 start_time = pygame.time.get_ticks()
 
         elif level.get_pixel_value(pilt, (x - BORDER / 2, y)) == (255, 0, 0):
-            timer_started = not timer_started
+            timer_started = False
+            ajad.append(passed_time / 1000)
 
     if timer_started:
         passed_time = pygame.time.get_ticks() - start_time
@@ -219,9 +221,24 @@ while running:
     #uuendame akent
     #Aja kuvamine
     text = font.render("Current time:", True, font_color)
+    text_best = font.render("Best times:", True, font_color)
     text_sec = font.render(str(passed_time / 1000), True, font_color)
+
     screen.blit(text, (size[0] + int(BORDER / 2), 0))
     screen.blit(text_sec, (size[0] + int(BORDER / 2) + 100, 50))
+    screen.blit(text_best, (size[0] + int(BORDER / 2), 100))
+    # Parimad ajad
+    screen.blit(font.render("1. ", True, font_color), (size[0] + int(BORDER / 2), 150))
+    screen.blit(font.render("2. ", True, font_color), (size[0] + int(BORDER / 2), 200))
+    screen.blit(font.render("3. ", True, font_color), (size[0] + int(BORDER / 2), 250))
+    screen.blit(font.render("4. ", True, font_color), (size[0] + int(BORDER / 2), 300))
+    screen.blit(font.render("5. ", True, font_color), (size[0] + int(BORDER / 2), 350))
+
+    screen.blit(font.render(str(sorted(ajad)[0]), True, font_color), (size[0] + int(BORDER / 2) + 100, 150))
+    screen.blit(font.render(str(sorted(ajad)[1]), True, font_color), (size[0] + int(BORDER / 2) + 100, 200))
+    screen.blit(font.render(str(sorted(ajad)[2]), True, font_color), (size[0] + int(BORDER / 2) + 100, 250))
+    screen.blit(font.render(str(sorted(ajad)[3]), True, font_color), (size[0] + int(BORDER / 2) + 100, 300))
+    screen.blit(font.render(str(sorted(ajad)[4]), True, font_color), (size[0] + int(BORDER / 2) + 100, 350))
 
     pygame.display.update()
     clock.tick(60)
