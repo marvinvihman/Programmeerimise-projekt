@@ -45,6 +45,7 @@ PI = math.pi
 level = Level("Level1.png")
 pilt = level.open_pic() #default size (1440, 1080)
 
+
 #leveli argumendid
 mode = pilt.mode
 size = pilt.size
@@ -84,11 +85,11 @@ data = pilt.tobytes()
 #level image väärtusena, et blittida ekraanile
 background3 = pygame.image.fromstring(data, size, mode)
 
-
+pildid = []
 backgrounds = []
-for _ in levelid:
+for s in levelid:
     # võtame mapi
-    level = Level("Level1.png")
+    level = Level(s)
     pilt = level.open_pic()  # default size (1440, 1080)
 
     # leveli argumendid
@@ -98,7 +99,11 @@ for _ in levelid:
 
     # level image väärtusena, et blittida ekraanile
     background = pygame.image.fromstring(data, size, mode)
+    pildid.append(pilt)
     backgrounds.append(background)
+
+
+
 
 #Aja muutujad
 clock = pygame.time.Clock()
@@ -206,31 +211,30 @@ while running:
         positionX += (acceleratingRight + acceleratingLeft) / math.sqrt(checkDiagonal) * SPEED
         positionY += (acceleratingDown + acceleratingUp) / math.sqrt(checkDiagonal) * SPEED
 
+
+
         #näitame karaktrit aknas
         screen.blit(playerImage, ((int(positionX), int(positionY))))
         #näitame piksi värvi karakteri  asukohas, tema vasak ülemine nurk
         #screen.blit(myfont.render(str(level.get_pixel_value(pilt, (positionX-BORDER/2, positionY))), False, (0, 0, 0)), (10, 10))
-
         #palli jaoks piiride loomine
         for i in range(1,playerSize+1):
             x = int(playerSize/2*math.sin(math.degrees(360/i))+positionX+playerSize/2)
             y = int(playerSize/2*math.cos(math.degrees(360/i))+positionY+playerSize/2)
-
             #kontrollimine, kas karkateri piir asub musta piksli peal
-            if level.get_pixel_value(pilt, (x-BORDER/2,y)) == (0, 0, 0):
+            if level.get_pixel_value(pildid[bg_index], (x-BORDER/2,y)) == (0, 0, 0):
                 if restart == True:
                     positionX, positionY = int(BORDER / 2) + 10, 0 + 10
-                else:
-                    running = False
-            elif level.get_pixel_value(pilt, (x-BORDER/2,y)) == (0, 255, 0):
+            elif level.get_pixel_value(pildid[bg_index], (x-BORDER/2,y)) == (0, 255, 0):
                 timer_started = True
                 if timer_started:
                     start_time = pygame.time.get_ticks()
 
-            elif level.get_pixel_value(pilt, (x - BORDER / 2, y)) == (255, 0, 0):
+            elif level.get_pixel_value(pildid[bg_index], (x - BORDER / 2, y)) == (255, 0, 0):
                 timer_started = False
                 ajad[bg_index].append(passed_time / 1000)
                 if restart == True:
+
                     if bg_index == len(backgrounds)-1:
                         game_over = True
                     else:
@@ -259,7 +263,7 @@ while running:
             moveUp = 0
             moveDown = 0
             positionX, positionY = int(BORDER / 2) + 10, 0 + 10
-            bg_index = 0
+            current_bg = backgrounds[0]
         else:
             if timer_started:
                 passed_time = pygame.time.get_ticks() - start_time
