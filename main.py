@@ -177,10 +177,10 @@ while running:
             y = int(playerSize/2*math.cos(math.degrees(360/i))+positionY+playerSize/2)
             #print(level.get_pixel_value(pildid[bg_index], (x - BORDER / 2, y)))
             #kontrollimine, kas karkateri piir asub musta piksli peal
-            if level.get_pixel_value(pildid[bg_index], (x-BORDER/2,y))[:3] == (0, 0, 0):
-                if restart == False:
+            if level.get_pixel_value(pildid[bg_index], (x-BORDER/2, y))[:3] == (0, 0, 0):
+                if restart == True:
                     positionX, positionY = int(BORDER / 2) + 10, 0 + 10
-            elif level.get_pixel_value(pildid[bg_index], (x-BORDER/2,y))[:3] == (0, 255, 0):
+            elif level.get_pixel_value(pildid[bg_index], (x-BORDER/2, y))[:3] == (0, 255, 0):
                 timer_started = True
                 if timer_started:
                     start_time = pygame.time.get_ticks()
@@ -206,9 +206,9 @@ while running:
 
         if game_over:
             screen.blit(font.render("Mäng läbi!", True, font_color),
-                        (size[0]/2, 650))
+                        (int(size[0]/2), 650))
             screen.blit(font.render("Uuesti mängimiseks vajuta tühikut!", True, font_color),
-                        (size[0]/2, 850))
+                        (int(size[0]/2), 850))
             acceleratingRight = 0
             acceleratingLeft = 0
             acceleratingDown = 0
